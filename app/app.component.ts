@@ -3,27 +3,38 @@
  */
 import  {Component, OnInit} from '@angular/core';
 
-import { MONTH } from './month';
-import { Day } from './day';
-
 @Component({
     selector: 'date-picker',
     template: `
-        <h1> {{ day }} </h1>
-        <table>
-         <tr *ngFor="let week of month;"> 
-             <td *ngFor="let day of week;">
-                {{ day.date }} ||
-             </td>
-         </tr>
-        </table>  
-    `})
+        <h1> {{ title }} </h1>
+        <div>
+        <div class="day-name">Пн</div>
+        <div class="day-name">Вт</div>
+        <div class="day-name">Ср</div>
+        <div class="day-name">Чт</div>
+        <div class="day-name">Пт</div>
+        <div class="day-name">Сб</div>
+        <div class="day-name">Вс</div>
+        <div *ngFor="let week of fullMonth;"> 
+             <div 
+             *ngFor="let day of week;"
+             [class.selected]="day === selectedDay"
+             (click)="onSelect(day)" class="day">
+                {{ day.getDate() }}
+             </div>
+        </div>
+        </div>
+
+    `,
+    styleUrls: ['app/app.component.css']})
 
 export class AppComponent implements OnInit{
     title = 'Datepicker';
     date = new Date();
     workingDate: Date;
-
+    selectedDay: Date;
+    fullMonth: Date[][];
+    
     ngOnInit(): void {
 
         if ((new Date(this.date.getFullYear(), this.date.getMonth(), 1)).getDay() == 0) {
@@ -31,39 +42,35 @@ export class AppComponent implements OnInit{
         } else {
             this.workingDate = new Date(this.date.getFullYear(), this.date.getMonth(), 2 - (new Date(this.date.getFullYear(), this.date.getMonth(), 1)).getDay());
         }
-        //console.log(this.workingDate);
+        this.fullMonth = this.createMonthArray();
+        console.log(this.fullMonth);
+
     }
 
-    nextDay() {
-        this.workingDate.setDate(this.workingDate.getDate() + 1);
+    nextDay(date: Date): Date {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
     }
 
-    current = this.date.getDate();
-    curDay = this.date.getDay();
-    curMonth = this.date.getMonth();
-    firstDay: number;
-
-    createRange(number: number){
-        var items: number[] = [];
-        for(var i = 1; i <= number; i++){
-            items.push(i);
-        }
+    createMonthArray(): Date[][] {
+        var items: Date[][] = [];
+        do {
+            items.push(this.createWeekArray());
+        } while (this.workingDate.getMonth() == this.date.getMonth());
         return items;
     }
 
-    createWeekArray(date: number){
-        console.log(date);
-        var items: number[] = [];
+    createWeekArray(): Date[] {
+        var items: Date[] = [];
         for(var i = 0; i < 7; i++){
-            console.log(date);
-            items.push(date);
-            //this.nextDay();
+            items.push(this.workingDate);
+            this.workingDate = this.nextDay(this.workingDate);
         }
-        console.log(items);
         return items;
     }
 
-    weekOne = this.createWeekArray(this.workingDate.getDate());
+    onSelect(day: Date): void {
+        this.selectedDay = day;
+    }
 }
 
 

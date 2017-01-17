@@ -1,0 +1,15 @@
+.day {
+	width: 60px;
+	text-align: center;
+	border:1px solid black;
+	display:inline-block;
+}
+.day-name {
+	width: 60px;
+	text-align: center;
+	display:inline-block;
+}
+.selected {
+    background-color: #CFD8DC !important;
+    color: white;
+}
