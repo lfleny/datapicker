@@ -1,18 +1,13 @@
-<h1> {{ title }} </h1>
-<div>
+<div class="datapicker-header" >
     <button (click)="prevMonth()">prev</button>
-    <h2> {{ currentDate | date:'MMMM' }} </h2>
+     {{ currentDate | date:'MMMM' }}
     <button (click)="nextMonth()">next</button>
 </div>
 
 <div>
-    <div class="day-name">Пн</div>
-    <div class="day-name">Вт</div>
-    <div class="day-name">Ср</div>
-    <div class="day-name">Чт</div>
-    <div class="day-name">Пт</div>
-    <div class="day-name">Сб</div>
-    <div class="day-name">Вс</div>
+    <div *ngFor="let dayName of week" class="day">
+        <p class="day">{{ dayName }}</p>
+    </div>
 
     <div *ngFor="let week of fullMonth;">
         <div    *ngFor="let day of week;"
@@ -21,11 +16,7 @@
                 [class.current-date]="day.getDate() == date.getDate() && day.getMonth() == date.getMonth()"
                 [ngClass]="setClasses(day)"
                 (click)="onSelect(day)" class="day">
-            {{ day | date:'dd' }}
+            <p class="date">{{ day | date:'dd' }}</p>
         </div>
     </div>
-</div>
-
-<div class="callback">
-    {{ callback }}
 </div>

@@ -12,20 +12,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  * Created by Sasha on 16.01.2017.
  */
 var core_1 = require('@angular/core');
+var weekDay_1 = require('./weekDay');
 var AppComponent = (function () {
     function AppComponent() {
-        this.title = 'Datepicker';
         this.date = new Date();
         this.currentDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.date.getDate(), 23, 59);
+        this.week = weekDay_1.WEEK;
         this.range = true;
         this.disablePreviosly = true;
         this.disableDate = [new Date(2017, 0, 28, 23, 59), new Date(2017, 0, 23, 23, 59)];
-        this.callback = 'this is callback';
+        this.onChange = new core_1.EventEmitter();
     }
     AppComponent.prototype.ngOnInit = function () {
         this.setWorkingDate();
         this.fullMonth = this.createMonthArray();
-        console.log(this.fullMonth);
     };
     AppComponent.prototype.setWorkingDate = function () {
         if ((new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1)).getDay() == 0) {
@@ -61,6 +61,10 @@ var AppComponent = (function () {
         if (!this.range) {
             if (!(this.disablePreviosly == true && day < this.date) && !isDisable) {
                 this.selectedDay = day;
+                this.onChange.emit({
+                    startDate: day,
+                    endDate: day
+                });
             }
         }
         else {
@@ -101,6 +105,10 @@ var AppComponent = (function () {
             this.endDate = startDate;
             this.startDate = dateBuff;
         }
+        this.onChange.emit({
+            startDate: this.startDate,
+            endDate: this.endDate
+        });
     };
     AppComponent.prototype.checkStartEndDate = function (day) {
         if (this.startDate == undefined) {
@@ -114,12 +122,15 @@ var AppComponent = (function () {
             this.startDate = undefined;
             this.endDate = undefined;
             this.startDate = day;
-            console.log(this.startDate);
         }
     };
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], AppComponent.prototype, "onChange", void 0);
     AppComponent = __decorate([
         core_1.Component({
-            selector: 'date-picker',
+            selector: 'datepicker',
             templateUrl: 'app/app.component.html',
             styleUrls: ['app/app.component.css']
         }), 

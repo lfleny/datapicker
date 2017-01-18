@@ -1,17 +1,24 @@
 .day {
+	padding-top: 20px;
 	color: #000000;
+	height: 35px;
 	width: 60px;
+	margin: 0 auto;
 	text-align: center;
-	border:1px solid black;
 	display:inline-block;
 }
 .day-name {
 	width: 60px;
+	height: 50px;
 	text-align: center;
-	display:inline-block;
+	border-bottom: 3px solid cadetblue;
+	padding-bottom: 5px;
+	display: inline-block;
 }
 .selected {
     background-color: #CFD8DC !important;
+	border:1px solid #CFD8DC;
+	border-radius: 35px;
     color: white;
 }
 .disable-day {
@@ -19,9 +26,21 @@
 	background-color: white !important;
 	width: 60px;
 	text-align: center;
-	border:1px solid black;
 	display:inline-block;
+	border:0px solid #CFD8DC !important;
 }
 .current-date {
 	border:1px solid red;
+	border-radius: 35px;
+}
+p.date{
+	margin: 0 auto;
+	text-align: center;
+}
+
+.datapicker-header {
+	margin: 0 auto;
+	margin-left: 90px;
+	display: inline-block;
+	font-size: xx-large;
 }

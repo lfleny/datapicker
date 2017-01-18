@@ -1,34 +1,38 @@
 /**
  * Created by Sasha on 16.01.2017.
  */
-import  {Component, OnInit} from '@angular/core';
-import {isUndefined} from "util";
+import  {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import { WEEK } from './weekDay';
+
+export interface DatepickerChange{
+    startDate: Date;
+    endDate: Date;
+}
 
 @Component({
-    selector: 'date-picker',
+    selector: 'datepicker',
     templateUrl: 'app/app.component.html',
     styleUrls: ['app/app.component.css']
 })
 
 export class AppComponent implements OnInit{
-    title = 'Datepicker';
     date = new Date();
     currentDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.date.getDate(), 23, 59);
     workingDate: Date;
     selectedDay: Date;
     fullMonth: Date[][];
+    week: string[] = WEEK;
     range: boolean = true;
     disablePreviosly: boolean = true;
     disableDate: Date[] = [new Date(2017, 0, 28, 23, 59), new Date(2017, 0, 23, 23, 59)];
     startDate: Date;
     endDate: Date;
-    callback: string = 'this is callback';
+
+    @Output() onChange = new EventEmitter<DatepickerChange>();
     
     ngOnInit(): void {
-
         this.setWorkingDate();
         this.fullMonth = this.createMonthArray();
-        console.log(this.fullMonth);
     }
 
     setWorkingDate(): void {
@@ -69,6 +73,10 @@ export class AppComponent implements OnInit{
         if (!this.range) {
             if (!(this.disablePreviosly == true && day < this.date) && !isDisable) {
                 this.selectedDay = day;
+                this.onChange.emit({
+                    startDate: day,
+                    endDate: day
+                });
             }
         } else {
             if (!(this.disablePreviosly == true && day < this.date) && !isDisable) {
@@ -105,11 +113,15 @@ export class AppComponent implements OnInit{
 
     createRange(startDate: Date, endDate: Date): void {
         var dateBuff: Date;
-            if(endDate < startDate) {
-                dateBuff = endDate;
-                this.endDate = startDate;
-                this.startDate = dateBuff;
-            }
+        if(endDate < startDate) {
+            dateBuff = endDate;
+            this.endDate = startDate;
+            this.startDate = dateBuff;
+        }
+        this.onChange.emit({
+            startDate: this.startDate,
+            endDate: this.endDate
+        });
     }
 
     checkStartEndDate(day: Date): void {
@@ -122,7 +134,6 @@ export class AppComponent implements OnInit{
             this.startDate = undefined;
             this.endDate = undefined;
             this.startDate = day;
-            console.log(this.startDate);
         }
     }
 

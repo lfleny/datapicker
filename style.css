@@ -1,36 +1,15 @@
-/* #docregion , quickstart, toh */
-/* Master Styles */
-h1 {
-  color: #369;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 250%;
-}
-h2, h3 {
-  color: #444;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: lighter;
-}
-body {
-  margin: 2em;
-}
-/* #enddocregion quickstart */
 body {
   color: #000000;
   font-family: Cambria, Georgia;
 }
-/* #enddocregion toh */
-a {
-  cursor: pointer;
-  cursor: hand;
-}
 button {
-  font-family: Arial;
   background-color: #eee;
   border: none;
   padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
   cursor: hand;
+  font-family: Cambria, Georgia;
 }
 button:hover {
   background-color: #cfd8dc;
@@ -41,31 +20,10 @@ button:disabled {
   cursor: auto;
 }
 
-/* everywhere else */
 * {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Master Styles */
-h1 {
-  color: #369;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 250%;
-}
-h2, h3 {
-  color: #444;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: lighter;
-}
-body {
-  margin: 2em;
-}
-body, input[text], button {
-  color: #888;
-  font-family: Cambria, Georgia;
-}
-/* . . . */
-/* everywhere else */
-* {
-  font-family: Arial, Helvetica, sans-serif;
+datepicker {
+  margin: 0 auto;
 }
