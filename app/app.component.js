@@ -16,16 +16,22 @@ var AppComponent = (function () {
     function AppComponent() {
         this.title = 'Datepicker';
         this.date = new Date();
+        this.currentDate = new Date();
+        this.range = false;
+        this.disablePreviosly = false;
     }
     AppComponent.prototype.ngOnInit = function () {
-        if ((new Date(this.date.getFullYear(), this.date.getMonth(), 1)).getDay() == 0) {
-            this.workingDate = new Date(this.date.getFullYear(), this.date.getMonth(), -5);
-        }
-        else {
-            this.workingDate = new Date(this.date.getFullYear(), this.date.getMonth(), 2 - (new Date(this.date.getFullYear(), this.date.getMonth(), 1)).getDay());
-        }
+        this.setWorkingDate();
         this.fullMonth = this.createMonthArray();
         console.log(this.fullMonth);
+    };
+    AppComponent.prototype.setWorkingDate = function () {
+        if ((new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1)).getDay() == 0) {
+            this.workingDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), -5);
+        }
+        else {
+            this.workingDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2 - (new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1)).getDay());
+        }
     };
     AppComponent.prototype.nextDay = function (date) {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
@@ -34,7 +40,7 @@ var AppComponent = (function () {
         var items = [];
         do {
             items.push(this.createWeekArray());
-        } while (this.workingDate.getMonth() == this.date.getMonth());
+        } while (this.workingDate.getMonth() == this.currentDate.getMonth());
         return items;
     };
     AppComponent.prototype.createWeekArray = function () {
@@ -45,14 +51,26 @@ var AppComponent = (function () {
         }
         return items;
     };
-    AppComponent.prototype.onSelect = function (day) {
+    AppComponent.prototype.onSelect = function (day, event) {
         this.selectedDay = day;
+        console.log(event);
+    };
+    AppComponent.prototype.prevMonth = function () {
+        this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
+        this.setWorkingDate();
+        this.fullMonth = this.createMonthArray();
+    };
+    AppComponent.prototype.nextMonth = function () {
+        this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
+        this.setWorkingDate();
+        this.fullMonth = this.createMonthArray();
     };
     AppComponent = __decorate([
         core_1.Component({
             selector: 'date-picker',
-            template: "\n        <h1> {{ title }} </h1>\n        <div>\n        <div class=\"day-name\">\u041F\u043D</div>\n        <div class=\"day-name\">\u0412\u0442</div>\n        <div class=\"day-name\">\u0421\u0440</div>\n        <div class=\"day-name\">\u0427\u0442</div>\n        <div class=\"day-name\">\u041F\u0442</div>\n        <div class=\"day-name\">\u0421\u0431</div>\n        <div class=\"day-name\">\u0412\u0441</div>\n        <div *ngFor=\"let week of fullMonth;\"> \n             <div \n             *ngFor=\"let day of week;\"\n             [class.selected]=\"day === selectedDay\"\n             (click)=\"onSelect(day)\" class=\"day\">\n                {{ day.getDate() }}\n             </div>\n        </div>\n        </div>\n\n    ",
-            styleUrls: ['app/app.component.css'] }), 
+            templateUrl: 'app/app.component.html',
+            styleUrls: ['app/app.component.css']
+        }), 
         __metadata('design:paramtypes', [])
     ], AppComponent);
     return AppComponent;

@@ -5,46 +5,38 @@ import  {Component, OnInit} from '@angular/core';
 
 @Component({
     selector: 'date-picker',
-    template: `
-        <h1> {{ title }} </h1>
-        <div>
-        <div class="day-name">Пн</div>
-        <div class="day-name">Вт</div>
-        <div class="day-name">Ср</div>
-        <div class="day-name">Чт</div>
-        <div class="day-name">Пт</div>
-        <div class="day-name">Сб</div>
-        <div class="day-name">Вс</div>
-        <div *ngFor="let week of fullMonth;"> 
-             <div 
-             *ngFor="let day of week;"
-             [class.selected]="day === selectedDay"
-             (click)="onSelect(day)" class="day">
-                {{ day.getDate() }}
-             </div>
-        </div>
-        </div>
-
-    `,
-    styleUrls: ['app/app.component.css']})
+    templateUrl: 'app/app.component.html',
+    styleUrls: ['app/app.component.css']
+})
 
 export class AppComponent implements OnInit{
     title = 'Datepicker';
     date = new Date();
+    currentDate = new Date();
     workingDate: Date;
     selectedDay: Date;
     fullMonth: Date[][];
+    range: boolean = false;
+    disablePreviosly: boolean = false;
+    disablePrevioslyDate: Date;
+    disableDate: Date[];
+    startDate: Date;
+    endDate: Date;
     
     ngOnInit(): void {
 
-        if ((new Date(this.date.getFullYear(), this.date.getMonth(), 1)).getDay() == 0) {
-            this.workingDate = new Date(this.date.getFullYear(), this.date.getMonth(), -5);
-        } else {
-            this.workingDate = new Date(this.date.getFullYear(), this.date.getMonth(), 2 - (new Date(this.date.getFullYear(), this.date.getMonth(), 1)).getDay());
-        }
+        this.setWorkingDate();
         this.fullMonth = this.createMonthArray();
         console.log(this.fullMonth);
 
+    }
+
+    setWorkingDate(): void {
+        if ((new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1)).getDay() == 0) {
+            this.workingDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), -5);
+        } else {
+            this.workingDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2 - (new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1)).getDay());
+        }
     }
 
     nextDay(date: Date): Date {
@@ -55,7 +47,7 @@ export class AppComponent implements OnInit{
         var items: Date[][] = [];
         do {
             items.push(this.createWeekArray());
-        } while (this.workingDate.getMonth() == this.date.getMonth());
+        } while (this.workingDate.getMonth() == this.currentDate.getMonth());
         return items;
     }
 
@@ -68,9 +60,21 @@ export class AppComponent implements OnInit{
         return items;
     }
 
-    onSelect(day: Date): void {
+    onSelect(day: Date, event: any): void {
         this.selectedDay = day;
+        console.log(event);
     }
+    prevMonth(): void {
+        this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
+        this.setWorkingDate();
+        this.fullMonth = this.createMonthArray();
+    }
+    nextMonth(): void {
+        this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
+        this.setWorkingDate();
+        this.fullMonth = this.createMonthArray();
+    }
+
 }
 
 
