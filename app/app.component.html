@@ -12,6 +12,8 @@
     <div *ngFor="let week of fullMonth;">
         <div    *ngFor="let day of week;"
                 [class.disable-day]="disablePreviosly == true && day < date"
+                [class.weekend]="day.getDay() == 6 || day.getDay() == 0"
+                [class.anotherMonth]="day.getMonth() != currentDate.getMonth()"
                 [class.selected]="day === selectedDay || day === startDate || day === endDate || (range && day >= startDate && day <= endDate)"
                 [class.current-date]="day.getDate() == date.getDate() && day.getMonth() == date.getMonth()"
                 [ngClass]="setClasses(day)"

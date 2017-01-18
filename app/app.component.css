@@ -38,6 +38,13 @@ p.date{
 	text-align: center;
 }
 
+.weekend {
+	color: red;
+}
+.anotherMonth {
+	opacity: 0.5;
+}
+
 .datapicker-header {
 	margin: 0 auto;
 	margin-left: 90px;
