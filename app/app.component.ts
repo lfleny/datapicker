@@ -17,9 +17,9 @@ export class AppComponent implements OnInit{
     workingDate: Date;
     selectedDay: Date;
     fullMonth: Date[][];
-    range: boolean = true;
+    range: boolean = false;
     disablePreviosly: boolean = true;
-    disableDate: Date[];
+    disableDate: Date[] = [new Date(2017, 0, 28, 23, 59), new Date(2017, 0, 23, 23, 59)];
     startDate: Date;
     endDate: Date;
     callback: string = 'this is callback';
@@ -29,7 +29,8 @@ export class AppComponent implements OnInit{
         this.setWorkingDate();
         this.fullMonth = this.createMonthArray();
         console.log(this.fullMonth);
-
+        console.log(this.searchDisDate(this.disableDate[0]));
+        console.log(this.searchDisDate(this.disableDate[1]));
     }
 
     setWorkingDate(): void {
@@ -73,14 +74,7 @@ export class AppComponent implements OnInit{
             }
         } else {
             if (!(this.disablePreviosly == true && day < this.date) && !isDisable) {
-                if(this.startDate == undefined) {
-                    this.startDate = day;
-                } else if (this.endDate == undefined) {
-                    this.endDate = day;
-                    this.createRange(this.startDate, this.endDate);
-                    this.startDate = undefined;
-                    this.endDate = undefined;
-                }
+               this.checkStartEndDate(day);
             }
         }
     }
@@ -104,7 +98,26 @@ export class AppComponent implements OnInit{
         return false;
     }
     createRange(startDate: Date, endDate: Date): void {
+        var dateBuff: Date;
+            if(endDate < startDate) {
+                dateBuff = endDate;
+                this.endDate = startDate;
+                this.startDate = dateBuff;
+            }
+    }
 
+    checkStartEndDate(day: Date): void {
+        if(this.startDate == undefined) {
+            this.startDate = day;
+        } else if (this.endDate == undefined) {
+            this.endDate = day;
+            this.createRange(this.startDate, this.endDate);
+        } else {
+            this.startDate = undefined;
+            this.endDate = undefined;
+            this.startDate = day;
+            console.log(this.startDate);
+        }
     }
 
 }

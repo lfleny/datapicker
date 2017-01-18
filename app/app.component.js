@@ -17,14 +17,17 @@ var AppComponent = (function () {
         this.title = 'Datepicker';
         this.date = new Date();
         this.currentDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.date.getDate(), 23, 59);
-        this.range = true;
+        this.range = false;
         this.disablePreviosly = true;
+        this.disableDate = [new Date(2017, 0, 28, 23, 59), new Date(2017, 0, 23, 23, 59)];
         this.callback = 'this is callback';
     }
     AppComponent.prototype.ngOnInit = function () {
         this.setWorkingDate();
         this.fullMonth = this.createMonthArray();
         console.log(this.fullMonth);
+        console.log(this.searchDisDate(this.disableDate[0]));
+        console.log(this.searchDisDate(this.disableDate[1]));
     };
     AppComponent.prototype.setWorkingDate = function () {
         if ((new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1)).getDay() == 0) {
@@ -64,15 +67,7 @@ var AppComponent = (function () {
         }
         else {
             if (!(this.disablePreviosly == true && day < this.date) && !isDisable) {
-                if (this.startDate == undefined) {
-                    this.startDate = day;
-                }
-                else if (this.endDate == undefined) {
-                    this.endDate = day;
-                    this.createRange(this.startDate, this.endDate);
-                    this.startDate = undefined;
-                    this.endDate = undefined;
-                }
+                this.checkStartEndDate(day);
             }
         }
     };
@@ -96,6 +91,27 @@ var AppComponent = (function () {
         return false;
     };
     AppComponent.prototype.createRange = function (startDate, endDate) {
+        var dateBuff;
+        if (endDate < startDate) {
+            dateBuff = endDate;
+            this.endDate = startDate;
+            this.startDate = dateBuff;
+        }
+    };
+    AppComponent.prototype.checkStartEndDate = function (day) {
+        if (this.startDate == undefined) {
+            this.startDate = day;
+        }
+        else if (this.endDate == undefined) {
+            this.endDate = day;
+            this.createRange(this.startDate, this.endDate);
+        }
+        else {
+            this.startDate = undefined;
+            this.endDate = undefined;
+            this.startDate = day;
+            console.log(this.startDate);
+        }
     };
     AppComponent = __decorate([
         core_1.Component({

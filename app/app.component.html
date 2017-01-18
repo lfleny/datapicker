@@ -1,7 +1,10 @@
 <h1> {{ title }} </h1>
-<button (click)="prevMonth()">prev</button>
-<h2> {{ currentDate | date:'MMMM' }} </h2>
-<button (click)="nextMonth()">next</button>
+<div>
+    <button (click)="prevMonth()">prev</button>
+    <h2> {{ currentDate | date:'MMMM' }} </h2>
+    <button (click)="nextMonth()">next</button>
+</div>
+
 <div>
     <div class="day-name">Пн</div>
     <div class="day-name">Вт</div>
@@ -14,7 +17,8 @@
     <div *ngFor="let week of fullMonth;">
         <div    *ngFor="let day of week;"
                 [class.disable-day]="disablePreviosly == true && day < date"
-                [class.selected]="day === selectedDay"
+                [class.selected]="day === selectedDay || day === startDate || day === endDate || (range && day >= startDate && day <= endDate)"
+                [class.current-date]="day.getDate() == date.getDate() && day.getMonth() == date.getMonth()"
                 (click)="onSelect(day)" class="day">
             {{ day | date:'dd' }}
         </div>
