@@ -17,7 +17,7 @@ export class AppComponent implements OnInit{
     workingDate: Date;
     selectedDay: Date;
     fullMonth: Date[][];
-    range: boolean = false;
+    range: boolean = true;
     disablePreviosly: boolean = true;
     disableDate: Date[] = [new Date(2017, 0, 28, 23, 59), new Date(2017, 0, 23, 23, 59)];
     startDate: Date;
@@ -29,8 +29,6 @@ export class AppComponent implements OnInit{
         this.setWorkingDate();
         this.fullMonth = this.createMonthArray();
         console.log(this.fullMonth);
-        console.log(this.searchDisDate(this.disableDate[0]));
-        console.log(this.searchDisDate(this.disableDate[1]));
     }
 
     setWorkingDate(): void {
@@ -91,12 +89,20 @@ export class AppComponent implements OnInit{
 
     searchDisDate(day: Date): boolean {
         for (var disDay of this.disableDate) {
-            if (disDay == day) {
+            if (disDay.getTime() == day.getTime()) {
                 return true;
             }
         }
         return false;
     }
+    setClasses(day: Date) {
+
+        let classes =  {
+            'disable-day': this.searchDisDate(day) || this.disablePreviosly == true && day < this.date    // true
+        };
+        return classes;
+    }
+
     createRange(startDate: Date, endDate: Date): void {
         var dateBuff: Date;
             if(endDate < startDate) {

@@ -15,7 +15,8 @@
     color: white;
 }
 .disable-day {
-	color: #888;
+	color: #888 !important;
+	background-color: white !important;
 	width: 60px;
 	text-align: center;
 	border:1px solid black;

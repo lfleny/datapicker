@@ -17,7 +17,7 @@ var AppComponent = (function () {
         this.title = 'Datepicker';
         this.date = new Date();
         this.currentDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.date.getDate(), 23, 59);
-        this.range = false;
+        this.range = true;
         this.disablePreviosly = true;
         this.disableDate = [new Date(2017, 0, 28, 23, 59), new Date(2017, 0, 23, 23, 59)];
         this.callback = 'this is callback';
@@ -26,8 +26,6 @@ var AppComponent = (function () {
         this.setWorkingDate();
         this.fullMonth = this.createMonthArray();
         console.log(this.fullMonth);
-        console.log(this.searchDisDate(this.disableDate[0]));
-        console.log(this.searchDisDate(this.disableDate[1]));
     };
     AppComponent.prototype.setWorkingDate = function () {
         if ((new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1)).getDay() == 0) {
@@ -84,11 +82,17 @@ var AppComponent = (function () {
     AppComponent.prototype.searchDisDate = function (day) {
         for (var _i = 0, _a = this.disableDate; _i < _a.length; _i++) {
             var disDay = _a[_i];
-            if (disDay == day) {
+            if (disDay.getTime() == day.getTime()) {
                 return true;
             }
         }
         return false;
+    };
+    AppComponent.prototype.setClasses = function (day) {
+        var classes = {
+            'disable-day': this.searchDisDate(day) || this.disablePreviosly == true && day < this.date // true
+        };
+        return classes;
     };
     AppComponent.prototype.createRange = function (startDate, endDate) {
         var dateBuff;
