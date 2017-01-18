@@ -2,6 +2,7 @@
  * Created by Sasha on 16.01.2017.
  */
 import  {Component, OnInit} from '@angular/core';
+import {isUndefined} from "util";
 
 @Component({
     selector: 'date-picker',
@@ -12,16 +13,16 @@ import  {Component, OnInit} from '@angular/core';
 export class AppComponent implements OnInit{
     title = 'Datepicker';
     date = new Date();
-    currentDate = new Date();
+    currentDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.date.getDate(), 23, 59);
     workingDate: Date;
     selectedDay: Date;
     fullMonth: Date[][];
-    range: boolean = false;
-    disablePreviosly: boolean = false;
-    disablePrevioslyDate: Date;
+    range: boolean = true;
+    disablePreviosly: boolean = true;
     disableDate: Date[];
     startDate: Date;
     endDate: Date;
+    callback: string = 'this is callback';
     
     ngOnInit(): void {
 
@@ -33,14 +34,14 @@ export class AppComponent implements OnInit{
 
     setWorkingDate(): void {
         if ((new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1)).getDay() == 0) {
-            this.workingDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), -5);
+            this.workingDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), -5, 23, 59);
         } else {
-            this.workingDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2 - (new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1)).getDay());
+            this.workingDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2 - (new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1)).getDay(), 23, 59);
         }
     }
 
     nextDay(date: Date): Date {
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 23, 59);
     }
 
     createMonthArray(): Date[][] {
@@ -60,9 +61,28 @@ export class AppComponent implements OnInit{
         return items;
     }
 
-    onSelect(day: Date, event: any): void {
-        this.selectedDay = day;
-        console.log(event);
+    onSelect(day: Date): void {
+        var isDisable: boolean = false;
+        if(this.disableDate != undefined) {
+            isDisable = this.searchDisDate(day);
+        }
+
+        if (!this.range) {
+            if (!(this.disablePreviosly == true && day < this.date) && !isDisable) {
+                this.selectedDay = day;
+            }
+        } else {
+            if (!(this.disablePreviosly == true && day < this.date) && !isDisable) {
+                if(this.startDate == undefined) {
+                    this.startDate = day;
+                } else if (this.endDate == undefined) {
+                    this.endDate = day;
+                    this.createRange(this.startDate, this.endDate);
+                    this.startDate = undefined;
+                    this.endDate = undefined;
+                }
+            }
+        }
     }
     prevMonth(): void {
         this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
@@ -73,6 +93,18 @@ export class AppComponent implements OnInit{
         this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
         this.setWorkingDate();
         this.fullMonth = this.createMonthArray();
+    }
+
+    searchDisDate(day: Date): boolean {
+        for (var disDay of this.disableDate) {
+            if (disDay == day) {
+                return true;
+            }
+        }
+        return false;
+    }
+    createRange(startDate: Date, endDate: Date): void {
+
     }
 
 }

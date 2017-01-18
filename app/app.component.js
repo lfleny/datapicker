@@ -16,9 +16,10 @@ var AppComponent = (function () {
     function AppComponent() {
         this.title = 'Datepicker';
         this.date = new Date();
-        this.currentDate = new Date();
-        this.range = false;
-        this.disablePreviosly = false;
+        this.currentDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.date.getDate(), 23, 59);
+        this.range = true;
+        this.disablePreviosly = true;
+        this.callback = 'this is callback';
     }
     AppComponent.prototype.ngOnInit = function () {
         this.setWorkingDate();
@@ -27,14 +28,14 @@ var AppComponent = (function () {
     };
     AppComponent.prototype.setWorkingDate = function () {
         if ((new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1)).getDay() == 0) {
-            this.workingDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), -5);
+            this.workingDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), -5, 23, 59);
         }
         else {
-            this.workingDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2 - (new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1)).getDay());
+            this.workingDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2 - (new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1)).getDay(), 23, 59);
         }
     };
     AppComponent.prototype.nextDay = function (date) {
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 23, 59);
     };
     AppComponent.prototype.createMonthArray = function () {
         var items = [];
@@ -51,9 +52,29 @@ var AppComponent = (function () {
         }
         return items;
     };
-    AppComponent.prototype.onSelect = function (day, event) {
-        this.selectedDay = day;
-        console.log(event);
+    AppComponent.prototype.onSelect = function (day) {
+        var isDisable = false;
+        if (this.disableDate != undefined) {
+            isDisable = this.searchDisDate(day);
+        }
+        if (!this.range) {
+            if (!(this.disablePreviosly == true && day < this.date) && !isDisable) {
+                this.selectedDay = day;
+            }
+        }
+        else {
+            if (!(this.disablePreviosly == true && day < this.date) && !isDisable) {
+                if (this.startDate == undefined) {
+                    this.startDate = day;
+                }
+                else if (this.endDate == undefined) {
+                    this.endDate = day;
+                    this.createRange(this.startDate, this.endDate);
+                    this.startDate = undefined;
+                    this.endDate = undefined;
+                }
+            }
+        }
     };
     AppComponent.prototype.prevMonth = function () {
         this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
@@ -64,6 +85,17 @@ var AppComponent = (function () {
         this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
         this.setWorkingDate();
         this.fullMonth = this.createMonthArray();
+    };
+    AppComponent.prototype.searchDisDate = function (day) {
+        for (var _i = 0, _a = this.disableDate; _i < _a.length; _i++) {
+            var disDay = _a[_i];
+            if (disDay == day) {
+                return true;
+            }
+        }
+        return false;
+    };
+    AppComponent.prototype.createRange = function (startDate, endDate) {
     };
     AppComponent = __decorate([
         core_1.Component({
